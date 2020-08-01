@@ -87,14 +87,6 @@ void loop()
         units = 0.00;
     }
    
-// ==========================================
-// ==========================================
-
-    //ounces = units * 0.035274;
-    //grams=ounces*28.3475 ;
-    //count++;
-    //average=(average+grams)/count;
-
 
   // ==========================================
   //          Serial Printing
@@ -111,12 +103,6 @@ void loop()
     Serial.print(timeClient.getMinutes());
     Serial.print(":");
     Serial.println(timeClient.getSeconds());
-    //Serial.println(timeClient.getFormattedTime());
-
-  // ==========================================
-  // ==========================================
-
-    String fireTemp = String(grams) + String("grams");
 
   // ==========================================
   //          Callibaration Adjust
@@ -129,9 +115,7 @@ void loop()
         else if(temp == '-' || temp == 'z')
             calibration_factor -= 2;
     }
-  // ==========================================
-  // ==========================================
-
+ 
     // ==========================================
   //          Data Uploading to Firebase
   // ==========================================
