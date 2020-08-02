@@ -23,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class HomeFragment extends Fragment {
 
-    public static String name = "Yogesh";
     TextView value;
     TextView quantity;
     TextView mes;
@@ -42,6 +41,7 @@ public class HomeFragment extends Fragment {
         mes=v.findViewById(R.id.message);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+        //Database reference to fetch value from the firebase database.
         DatabaseReference databaseReference = database.getReference();
         final Query lastQuery = databaseReference.child("Weight").orderByKey().limitToLast(1); //database reference pointing to root of database
 
@@ -91,10 +91,4 @@ public class HomeFragment extends Fragment {
         });
         return v;
     }
-
-    public static String getName()
-    {
-        return name;
-    }
-
 }
