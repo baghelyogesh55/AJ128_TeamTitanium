@@ -7,24 +7,16 @@
 #include <HX711.h>
 #include <WiFiClient.h>
 
-
-// FireBase Credentials 
+//firebase credentials
 const char FIREBASE_HOST [] ="nodemcu-1212e.firebaseio.com";
-
 const char FIREBASE_AUTH [] ="3DIEuRkABn2lZuFDaUSg9wwk87yQPZ2LjBb7q902";
-
-//Users's WIFI Name
 #define WIFI_SSID "AirtelWifi"
-
-//Wifi Password
-#define WIFI_PASSWORD "Ankush31@Pragati17"  
-
-const long utcOffsetInSeconds = 15780;
+#define WIFI_PASSWORD "Ankush31@Pragati17"
+const long utcOffsetInSeconds = 19800;
 float weight;
 HX711 scale;
 //LDR Pin Connected at A0 Pin
 WiFiClient client;
-
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
 
@@ -67,42 +59,52 @@ void setup()
 
     timeClient.begin();
     Firebase.begin(FIREBASE_HOST,FIREBASE_AUTH);
-
-    
-
-
 }
 
 void loop()
-{
-    scale.set_scale(calibration_factor); //Adjust to this calibration factor
+{timeClient.update();
+    scale.set_scale(calibration_factor);      //Adjusted to this calibration factor
 
     Serial.print("Reading: ");
   // ==========================================
   //          ADDED PART OF AVERAGE
   // ==========================================
-    units = scale.get_units(),10;
-    if (units <10)
+  sum=0.0;
+    for(int i=0;i<10;i++){
+    units = scale.get_units(), 10;
+    if (units < 0)
     {
         units = 0.00;
     }
-   
+    sum+=units ;
+    delay(1000);
+    }
+    grams=sum/10 ;
+// ==========================================
+// ==========================================
 
   // ==========================================
   //          Serial Printing
   // ==========================================
-    Serial.print(average);
-    Serial.print(ounces);
+  //  Serial.print(average);
+    //Serial.print(ounces);
     Serial.print(" grams ");
     Serial.print(grams);
     Serial.print(" calibration_factor: ");
     Serial.print(calibration_factor);
-    Serial.println();
-    Serial.print(timeClient.getHours());
-    Serial.print(":");
-    Serial.print(timeClient.getMinutes());
-    Serial.print(":");
-    Serial.println(timeClient.getSeconds());
+    //Serial.println();
+    Serial.print("  ");
+//    Serial.print(timeClient.getHours());
+//    Serial.print(":");
+//    Serial.print(timeClient.getMinutes());
+//    Serial.print(":");
+//    Serial.println(timeClient.getSeconds());
+    Serial.println(timeClient.getFormattedTime());
+
+  // ==========================================
+  // ==========================================
+
+    String fireTemp = String(grams) +"@"+  String(timeClient.getFormattedTime()); // The string which will pushed to firebase
 
   // ==========================================
   //          Callibaration Adjust
@@ -115,11 +117,12 @@ void loop()
         else if(temp == '-' || temp == 'z')
             calibration_factor -= 2;
     }
- 
+
     // ==========================================
   //          Data Uploading to Firebase
   // ==========================================
-    Firebase.pushFloat("Weight",grams);
+//    Firebase.pushFloat("Weight",grams);
+Firebase.pushString("Weight",fireTemp);
     // handle error
     if (Firebase.failed())
     {
