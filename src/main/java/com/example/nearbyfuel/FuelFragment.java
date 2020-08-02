@@ -102,7 +102,10 @@ public class FuelFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
-
+/*
+*This method is used to find the current location of user.
+*/
+    
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -150,6 +153,9 @@ public class FuelFragment extends Fragment implements OnMapReadyCallback, Google
         }
     }
 
+    /*
+    * To check whether the google play services are active.
+    */
 
     private boolean CheckGooglePlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -191,6 +197,9 @@ public class FuelFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onConnectionSuspended(int i) {    }
 
+    /*
+    * This method will automatically update the user's location
+    */
     @Override
     public void onLocationChanged(Location location) {
         Log.d("onLocationChanged", "entered");
